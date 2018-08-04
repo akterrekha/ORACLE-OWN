@@ -1,0 +1,279 @@
+SQL> connect
+Enter user-name: system
+Connected.
+SQL> create user eid2 identified by eid2;
+
+User created.
+
+SQL> grant dba to eid2;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: eid2
+Connected.
+SQL> create table departments(dep_id number(3)primary key,dep_name varchar2(20) not null);
+
+Table created.
+
+SQL> create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(5,2)check(salary>10000),joining_date date default sysdate,country varchar2(10)default 'BD',dep_id number(3) constraint dep_emp_fk (dep_id) references departments (dep_id));
+create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(5,2)check(salary>10000),joining_date date default sysdate,country varchar2(10)default 'BD',dep_id number(3) constraint dep_emp_fk (dep_id) references departments (dep_id))
+                                                                                                                                                                                                                                        *
+ERROR at line 1:
+ORA-02253: constraint specification not allowed here 
+
+
+SQL> create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(7,2)check(salary>10000),joining_date date default sysdate,country varchar2(10) default 'BD',dep_id number(3) constraint dep_emp_fk (dep_id) references departments (dep_id));
+create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(7,2)check(salary>10000),joining_date date default sysdate,country varchar2(10) default 'BD',dep_id number(3) constraint dep_emp_fk (dep_id) references departments (dep_id))
+                                                                                                                                                                                                                                         *
+ERROR at line 1:
+ORA-02253: constraint specification not allowed here 
+
+
+SQL> create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(7,2)check(salary>10000),joining_date date default sysdate,country varchar2(10) default 'BD',dep_id number(3), constraint dep_emp_fk (dep_id) references departments (dep_id));
+create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(7,2)check(salary>10000),joining_date date default sysdate,country varchar2(10) default 'BD',dep_id number(3), constraint dep_emp_fk (dep_id) references departments (dep_id))
+                                                                                                                                                                                                                                                                *
+ERROR at line 1:
+ORA-00904: : invalid identifier 
+
+
+SQL> create table employees(emp_id number(3)primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(7,2)check(salary>10000),joining_date date default sysdate,country varchar2(10) default 'BD',dep_id number(3), constraint dep_emp_fk foreign key (dep_id) references departments (dep_id));
+
+Table created.
+
+SQL> describe departments;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEP_ID                                    NOT NULL NUMBER(3)
+ DEP_NAME                                  NOT NULL VARCHAR2(20)
+
+SQL> describe employees;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL NUMBER(3)
+ EMP_NAME                                  NOT NULL VARCHAR2(20)
+ MOBILE_NO                                          NUMBER(11)
+ SALARY                                             NUMBER(7,2)
+ JOINING_DATE                                       DATE
+ COUNTRY                                            VARCHAR2(10)
+ DEP_ID                                             NUMBER(3)
+
+SQL> create sequence dep_seq
+  2  increment by 10
+  3  start with 0
+  4  minvalue 0
+  5  maxvalue 100
+  6  nocache
+  7  nocycle;
+
+Sequence created.
+
+SQL> select sequence_name from user_sequences;
+
+SEQUENCE_NAME                                                                   
+------------------------------                                                  
+DEP_SEQ                                                                         
+
+SQL> select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+SYS_C007121                                                                     
+SYS_C007124                                                                     
+SYS_C007125                                                                     
+
+SQL> create index dep_name_idx on departments (dep_name);
+
+Index created.
+
+SQL> select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+DEP_NAME_IDX                                                                    
+SYS_C007121                                                                     
+SYS_C007124                                                                     
+SYS_C007125                                                                     
+
+SQL> insert into departments(dep_id,dep_name) values(dep_seq.nextval,'admin');
+
+1 row created.
+
+SQL> insert into departments(dep_id,dep_name) values(dep_seq.nextval,'software');
+
+1 row created.
+
+SQL> insert into departments(dep_id,dep_name) values(dep_seq.nextval,'marketing');
+
+1 row created.
+
+SQL> create view depview as select dep_id,dep_name from departments where dep_id = 20;
+
+View created.
+
+SQL> select view_name from user_views;
+
+VIEW_NAME                                                                       
+------------------------------                                                  
+DEPVIEW                                                                         
+
+SQL> create synonym dept for alice.departments;
+
+Synonym created.
+
+SQL> create synonym deparvu for alice.depview;
+
+Synonym created.
+
+SQL> select * from dept;
+select * from dept
+              *
+ERROR at line 1:
+ORA-00980: synonym translation is no longer valid 
+
+
+SQL> select * from dept;
+select * from dept
+              *
+ERROR at line 1:
+ORA-00980: synonym translation is no longer valid 
+
+
+SQL> select * from departments;
+
+    DEP_ID DEP_NAME                                                             
+---------- --------------------                                                 
+         0 admin                                                                
+        10 software                                                             
+        20 marketing                                                            
+
+SQL> create synonym dep_syn for departments;
+
+Synonym created.
+
+SQL> select * from dep_syn;
+
+    DEP_ID DEP_NAME                                                             
+---------- --------------------                                                 
+         0 admin                                                                
+        10 software                                                             
+        20 marketing                                                            
+
+SQL> create view dep_view as select * from departments;
+
+View created.
+
+SQL> select * from dep_view;
+
+    DEP_ID DEP_NAME                                                             
+---------- --------------------                                                 
+         0 admin                                                                
+        10 software                                                             
+        20 marketing                                                            
+
+SQL> create synonym dep_view_syn for dep_view;
+
+Synonym created.
+
+SQL> select * from dep_view_syn;
+
+    DEP_ID DEP_NAME                                                             
+---------- --------------------                                                 
+         0 admin                                                                
+        10 software                                                             
+        20 marketing                                                            
+
+SQL> select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+DEP_NAME_IDX                                                                    
+SYS_C007121                                                                     
+SYS_C007124                                                                     
+SYS_C007125                                                                     
+
+SQL>  create index emp_name_idx on employees (emp_name);
+
+Index created.
+
+SQL>  select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+DEP_NAME_IDX                                                                    
+EMP_NAME_IDX                                                                    
+SYS_C007121                                                                     
+SYS_C007124                                                                     
+SYS_C007125                                                                     
+
+SQL>  insert into departments(dep_id,dep_name) values(dep_seq.nextval,'admin');
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'doly',01761528963,45000,'25-jul-18','japan',0);
+ insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'doly',01761528963,45000,'25-jul-18','japan',0)
+                                                                                            *
+ERROR at line 1:
+ORA-02289: sequence does not exist 
+
+
+SQL> create sequence emp_seq
+  2  increment by 5
+  3  start with 0
+  4  minvalue 0
+  5  maxvalue 200
+  6  nocache
+  7  nocycle;
+
+Sequence created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'doly',01761528963,45000,'25-jul-18','japan',0);
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'doly',01761528963,45000,'25-jul-18','nepal',0);
+ insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'doly',01761528963,45000,'25-jul-18','nepal',0)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (EID2.SYS_C007125) violated 
+
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'koly',01761928963,45000,'25-jul-18','nepal',0);
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'joly',01761923963,55000,'25-jul-18','vutan',10);
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'farhan',01764923963,50000,'30-jul-18','india',10);
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'sadiq',01764923763,60000,'02-aug-18','katar',10);
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'arman',01734923763,70000,'02-aug-18',20);
+ insert into employees(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'arman',01734923763,70000,'02-aug-18',20)
+                                                                                     *
+ERROR at line 1:
+ORA-00947: not enough values 
+
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,dep_id) values(emp_seq.nextval,'arman',01734923763,70000,20);
+
+1 row created.
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,dep_id) values(emp_seq.nextval,'sukhon',01734923763,70000,20);
+ insert into employees(emp_id,emp_name,mobile_no,salary,dep_id) values(emp_seq.nextval,'sukhon',01734923763,70000,20)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (EID2.SYS_C007125) violated 
+
+
+SQL>  insert into employees(emp_id,emp_name,mobile_no,salary,dep_id) values(emp_seq.nextval,'samoly',01734923163,70000,20);
+
+1 row created.
+
+SQL> spool off;
