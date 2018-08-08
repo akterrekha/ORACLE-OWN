@@ -1,0 +1,195 @@
+SQL> connect sys as sysdba
+Connected.
+SQL> create user oracle1 identified by oracle1;
+
+User created.
+
+SQL> create role oracle1_role;
+
+Role created.
+
+SQL> grant oracle1_role to oracle1;
+
+Grant succeeded.
+
+
+
+SQL> grant create session, create table to oracle1_role;
+
+Grant succeeded.
+
+SQL> create user oracle2 identified by oracle2;
+
+User created.
+
+SQL> create role oracle2_role;
+
+Role created.
+
+SQL> grant oracle2_role to oracle2;
+
+Grant succeeded.
+
+SQL> grant create session, create table to oracle2_role;
+
+Grant succeeded.
+
+SQL> connect sys as sysdba
+Connected.
+SQL> alter user oracle1 quota 500m on system;
+
+User altered.
+
+SQL> alter user oracle2 quota 500m on system;
+
+User altered.
+
+SQL> grant select on hr.departments to oracle1;
+
+Grant succeeded.
+
+SQL> connect sys as sysdba;
+Connected.
+SQL> grant select on hr.employees to oracle1;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: oracle1
+Connected.
+SQL> create table department as select * from hr.departments;
+
+Table created.
+
+SQL> create table employee as select * from hr.employees;
+
+Table created.
+
+SQL> describe table department;
+Usage: DESCRIBE [schema.]object[@db_link]
+SQL> describe department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPARTMENT_ID                                      NUMBER(4)
+ DEPARTMENT_NAME                           NOT NULL VARCHAR2(30)
+ MANAGER_ID                                         NUMBER(6)
+ LOCATION_ID                                        NUMBER(4)
+
+SQL> describe employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPLOYEE_ID                                        NUMBER(6)
+ FIRST_NAME                                         VARCHAR2(20)
+ LAST_NAME                                 NOT NULL VARCHAR2(25)
+ EMAIL                                     NOT NULL VARCHAR2(25)
+ PHONE_NUMBER                                       VARCHAR2(20)
+ HIRE_DATE                                 NOT NULL DATE
+ JOB_ID                                    NOT NULL VARCHAR2(10)
+ SALARY                                             NUMBER(8,2)
+ COMMISSION_PCT                                     NUMBER(2,2)
+ MANAGER_ID                                         NUMBER(6)
+ DEPARTMENT_ID                                      NUMBER(4)
+
+SQL> connect sys as sysdba;
+Connected.
+SQL> alter user oracle2 quota 1000m on system;
+
+User altered.
+
+SQL> grant select on hr.departments to oracle2;
+
+Grant succeeded.
+
+SQL> grant select on hr.employees to oracle2;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: oracle2
+Connected.
+SQL> create table department as select * from hr.departments;
+
+Table created.
+
+SQL> create table employee as select * from hr.employees;
+
+Table created.
+
+SQL> connect sys as sysdba;
+Connected.
+
+
+SQL> grant select on hr.locations to oracle2;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: oracle2
+Connected.
+SQL> create table location as select * from hr.locations;
+
+Table created.
+
+SQL> connect sys as sysdba;
+Connected.
+                               
+SQL> grant select,insert,update(department_id) on oracle2.employee to oracle1 with grant option;
+
+Grant succeeded.
+
+
+
+SQL> connect
+Enter user-name: oracle1
+Connected.
+SQL> update oracle2.employee set department_id = 80 where employee_id = 100;
+
+1 row updated.
+ select * from oracle2.employee where employee_id = 100;
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME
+----------- -------------------- -------------------------
+EMAIL                     PHONE_NUMBER         HIRE_DATE JOB_ID         SALARY
+------------------------- -------------------- --------- ---------- ----------
+COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+-------------- ---------- -------------
+        100 Steven               King
+SKING                     515.123.4567         17-JUN-03 AD_PRES         24000
+                                     80
+
+SQL> select * from oracle2.employee where rownum <=2;
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME
+----------- -------------------- -------------------------
+EMAIL                     PHONE_NUMBER         HIRE_DATE JOB_ID         SALARY
+------------------------- -------------------- --------- ---------- ----------
+COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+-------------- ---------- -------------
+        100 Steven               King
+SKING                     515.123.4567         17-JUN-03 AD_PRES         24000
+                                     80
+
+        101 Neena                Kochhar
+NKOCHHAR                  515.123.4568         21-SEP-05 AD_VP           17000
+                      100            90
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME
+----------- -------------------- -------------------------
+EMAIL                     PHONE_NUMBER         HIRE_DATE JOB_ID         SALARY
+------------------------- -------------------- --------- ---------- ----------
+COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+-------------- ---------- -------------
+
+
+SQL> connect sys as sysdba;
+Enter password:
+Connected.
+SQL> alter user oracle1 identified by ora1;
+
+User altered.
+
+SQL> connect
+Enter user-name: oracle1
+Enter password:
+Connected.
+SQL> spool off;

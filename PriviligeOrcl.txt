@@ -93,7 +93,7 @@ SQL> grant create session, create table ,create view to manage;
 
 Grant succeeded.
 
-SQL> grant manage to xyz2;
+SQL> grant manage to xyz2;g
 
 Grant succeeded.
 
