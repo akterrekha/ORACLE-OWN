@@ -1,0 +1,25 @@
+CREATE or REPLACE TRIGGER cus_af_ins after insert on customer FOR EACH ROW
+declare
+begin
+insert into cus_backup values (:new.c_id, :new.c_name, :new.adrees, :new.mobile_no, :new.salary);
+dbms_output.put_line('Record successfully inserted into backup table');
+end;
+/
+
+
+create or replace procedure insertCustomer(
+p_id in customer.c_id % type,
+p_name in customer.c_name % type,
+p_address in customer.adrees % type,
+p_mobile in customer.mobile_no % type,
+p_sal in customer.salary % type)
+is
+begin
+insert into customer(c_id,c_name,adrees,mobile_no,salary) values(p_id,p_name,p_address,p_mobile,p_sal);
+end;
+/
+
+begin
+insertCustomer(26,'joli','sylhet',01761589634,45000);
+end;
+/

@@ -1,0 +1,44 @@
+create or replace procedure insertCustomer(
+  2  p_id in customer.c_id % type,
+  3  p_name in customer.c_name % type,
+  4  p_mobile in customer.mobile_no % type,
+  5  p_country in customer.country % type)
+  6  is
+  7  begin
+  8  insert into customer(c_id,c_name,mobile_no,country) values(p_id,p_name,p_mobile,p_country);
+  9  end;
+ 10  /
+
+Procedure created.
+
+SQL> begin
+  2  insertCustomer(100,'akash',12345678978,'maldip');
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+
+create or replace procedure update_cus(
+p_id in customer.c_id % type,
+p_name in customer.c_name % type,
+p_mobile in customer.mobile_no % type,
+p_country in customer.country % type)
+is
+begin
+update customer set c_name=p_name,mobile_no=p_mobile,country=p_country where c_id=p_id;
+end;
+/
+
+create or replace procedure delete_cus(
+p_id in customer.c_id % type)
+is
+begin
+delete customer where c_id=p_id;
+end;
+/
+
+SQL> begin
+  2  delete_cus(100);
+  3  end;
+  4  /

@@ -1,0 +1,76 @@
+declare
+procedure compare(value varchar2, pattern varchar2) is
+begin
+if value like pattern then
+dbms_output.put_line('true');
+else
+dbms_output.put_line ('false');
+end if;
+end;
+begin
+compare('Zara Ali', 'Z%A_i');
+compare('Noha Ali', 'Z%A_i');
+end;
+////////////////////////////////////////////////////////////
+declare
+ x number(2) := 10;
+begin
+if (x between 5 and 20) then
+dbms_output.put_line ('true');
+else
+dbms_output.put_line ('false');
+end if;
+if (x between 5 and 10) then
+dbms_output.put_line ('true');
+else
+dbms_output.put_line ('false');
+end if;
+if (x between 11 and 20) then
+dbms_output.put_line ('true');
+else
+dbms_output.put_line ('false');
+end if;
+end;
+/////////////////////////////////////////////////////////////
+declare
+letter varchar2(1) := 'm';
+begin
+if (letter in ('a', 'b', 'c')) then
+dbms_output.put_line('true');
+else
+dbms_output.put_line ('false');
+end if;
+if (letter in ('m', 'n', 'o')) then
+dbms_output.put_line('true');
+else
+dbms_output.put_line ('false');
+end if;
+if (letter is null) then
+dbms_output.put_line('true');
+else
+dbms_output.put_line ('false');
+end if;
+end;
+/////////////////////////////////////////////////////////////
+declare
+a boolean := true;
+b boolean := false;
+begin
+if (a AND b) then
+dbms_output.put_line ('line 1 - condition is true');
+end if;
+if (a OR b) then
+dbms_output.put_line ('line 2 - condition is true');
+end if;
+if ( NOT a) then
+dbms_output.put_line ('line 3 - a is not true');
+else
+dbms_output.put_line ('line 3 - a is true');
+end if;
+if ( NOT b) then
+dbms_output.put_line ('line 4 - b is not true');
+else
+dbms_output.put_line ('line 4 - b is true');
+end if;
+end;
+////////////////////////////////////////////////////////////////////////////////////

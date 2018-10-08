@@ -1,0 +1,79 @@
+1.(ch-3/40)select last_name,to_char(salary*105,'$99,99,999.00')salary from employees;
+
+2.(ch-3/42)select last_name,hire_date from employees
+where hire_date =TO_DATE('MAY 24, 2007','fmMonthDD,YYYY');
+:::::::ANS:::::::::year5 change kre try krte hobe------------
+
+
+3.(ch-3/46) select last_name,substr(last_name,1,4),concat(substr(last_name,1,4),'hudai'),upper(concat(substr(last_name,1,4),'hudai')) from employees;
+
+
+4.(ch-3/50) select last_name,salary,commission_pct,nvl2(commission_pct,salary+commission_pct,salary)as Total from employees;
+ or=>   select last_name,department_id,salary,commission_pct,nvl2(commission_pct,salary+commission_pct,salary)as Total from employees
+  where department_id in(50,80);
+
+
+5.(ch-3/51) select first_name,LENGTH(first_name)"expr1",last_name,LENGTH(last_name)"Expr2",NULLIF(LENGTH(first_name),LENGTH(last_name)) result from employees;
+
+
+6.(ch-3/53)select last_name,manager_id ,commission_pct,coalesce(manager_id,commission_pct,-1)comm from employees
+order by commission_pct;
+
+
+7.(ch-5/7)select department_id,department_name,location_id,city from departments
+natural join locations;
+
+
+8.(ch-5/10)select employees.employee_id,employees.last_name,
+departments.location_id,department_id 
+from employees join departments 
+using(department_id);
+......................................or...............................
+         select employees.employee_id,employees.last_name,
+          departments.location_id,department_id 
+          from employees natural join departments
+
+9.(ch-5/14)select e.employee_id,e.last_name, e.department_id,
+ d.department_id, d.location_id
+ from employees e join departments d
+on (e.department_id = d.department_id); 
+
+
+10.(ch-6/9)select last_name,job_id,salary from employees
+where job_id = (select job_id from employees where employee_id= 141)and
+salary>(select salary from employees where employee_id=143);
+
+
+11.(ch-6/11)select * from employees
+where department_id=(select department_id from employees where employee_id=120);
+
+
+12.(ch-6/11)select department_id, min(salary)from employees
+group by department_id
+Having min(salary)>
+(select min(salary)from employees
+where department_id = 50);
+
+
+13.(ch-6/10)select last_name, job_id,salary
+from employees
+where salary = (select min(salary)from employees);
+
+
+14.(CH-6/15)select employee_id,last_name,job_id,salary
+from employees
+where salary<ANY(select salary from employees where job_id = 'IT_PROG')
+and job_id<>'IT_PROG';
+
+
+15.(ch-6/16)select employee_id,last_name,job_id,salary from employees
+where salary<ALL
+(select salary from employees
+where job_id='IT_PROG')
+AND job_id<> 'IT_PROG';
+
+
+16.(ch-6/17)select emp.last_name
+from employees emp
+where emp.employee_id NOT IN
+(select mgr.manager_id from employees mgr);   

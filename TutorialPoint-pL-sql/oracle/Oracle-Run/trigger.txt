@@ -1,0 +1,20 @@
+ create trigger cus_after_insert after insert on customer for each row
+  2  declare
+  3  begin
+  4  insert into cus_backup values (:new.c_id,:new.c_name, :new.mobile_no, :new.country);
+  5  dbms_output.put_line('record successfull');
+  6  end;
+  7  /
+
+Trigger created.
+ create trigger cus_af_up after update on customer for each row
+  declare
+  begin
+  update cus_backup
+  set c-id = :new.c-id
+  where c_id = :old.c_id;
+  dbms_output.put_line('update successfully');
+  end;
+  /
+
+
