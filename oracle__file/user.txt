@@ -1,0 +1,178 @@
+SQL> connect
+Enter user-name: 
+ERROR:
+ORA-01017: invalid username/password; logon denied 
+
+
+SQL> connect sys as sysdba;
+Connected.
+SQL> create user user1 identified by user1;
+
+User created.
+
+SQL> grant create session  to user1;
+
+Grant succeeded.
+
+SQL> grant create table to user1;
+
+Grant succeeded.
+
+SQL> alter user user1 quota 500m on system;
+
+User altered.
+
+SQL> create table teacher(id number(2) primary key,name varchar2(15) not null);
+
+Table created.
+
+SQL> insert into teacher(id,name) values (10,'kamal');
+
+1 row created.
+
+SQL> insert into teacher(id,name) values (15,'jamal');
+
+1 row created.
+
+SQL> insert into teacher(id,name) values (15,'nusrat');
+insert into teacher(id,name) values (15,'nusrat')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYS.SYS_C007139) violated 
+
+
+SQL> insert into teacher(id,name) values (20,'nusrat');
+
+1 row created.
+
+SQL> connect
+Enter user-name: user1
+Connected.
+SQL>  create table teacher(id number(2) primary key,name varchar2(15) not null);
+
+Table created.
+
+SQL>  insert into teacher(id,name) values (10,'kamal');
+
+1 row created.
+
+SQL> insert into teacher(id,name) values (15,'jamal');
+
+1 row created.
+
+SQL> insert into teacher(id,name) values (20,'nusrat');
+
+1 row created.
+
+SQL> connect sys as sysdba;
+Connected.
+SQL> drop table teacher;
+
+Table dropped.
+
+SQL> create user user2 identified by user2;
+
+User created.
+
+SQL> grant create session  to user2;
+
+Grant succeeded.
+
+SQL>  grant create table to user2;
+
+Grant succeeded.
+
+SQL> alter user user1 quota 500m on system;
+
+User altered.
+
+SQL> alter user user2 quota 500m on system;
+
+User altered.
+
+SQL> create table student(id number(2) primary key,name varchar2(15) not null);
+
+Table created.
+
+SQL> drop table student;
+
+Table dropped.
+
+SQL> connect
+Enter user-name: user2
+Connected.
+SQL> create table student(id number(2) primary key,name varchar2(15) not null);
+
+Table created.
+
+SQL>  insert into teacher(id,name) values (1,'doly');
+ insert into teacher(id,name) values (1,'doly')
+             *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL>  insert into student(id,name) values (1,'doly');
+
+1 row created.
+
+SQL>  insert into student(id,name) values (2,'moly');
+
+1 row created.
+
+SQL>  insert into student(id,name) values (3,'koly');
+
+1 row created.
+
+SQL> connect
+Enter user-name: user1
+Connected.
+SQL> 
+SQL> connect sys as sysdba;
+Connected.
+SQL> grant select,insert on user2.student to user2 with grant option;
+
+Grant succeeded.
+
+SQL> select * from user2.student;
+
+        ID NAME                                                                 
+---------- ---------------                                                      
+         1 doly                                                                 
+         2 moly                                                                 
+         3 koly                                                                 
+
+SQL>  insert into student(id,name) values (1,'joly');
+ insert into student(id,name) values (1,'joly')
+             *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> grant select,insert on user2.student to user1 with grant option;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: user1
+Connected.
+SQL> select * from user2.student;
+
+        ID NAME                                                                 
+---------- ---------------                                                      
+         1 doly                                                                 
+         2 moly                                                                 
+         3 koly                                                                 
+
+SQL>  insert into student(id,name) values (4,'joly');
+ insert into student(id,name) values (4,'joly')
+             *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL>  insert into user2.student(id,name) values (4,'joly');
+
+1 row created.
+
+SQL> spool off;

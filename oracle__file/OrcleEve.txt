@@ -1,0 +1,93 @@
+
+	   
+	   SQL> connect
+Enter user-name: system
+Enter password:
+Connected.
+SQL> create user eid identified by eid;
+
+User created.
+
+SQL> grant dba to eid;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: eid
+Enter password:
+Connected.
+SQL> create table department(d_id number(3)primary key,d_name varchar2(20)not null);
+
+Table created.
+
+SQL> drop table department;
+
+Table dropped.
+
+SQL> create table department(dep_id number(3)primary key,dep_name varchar2(20)not null);
+
+Table created.
+
+
+SQL> create table employee(emp_id number(3) primary key,emp_name varchar2(20) not null,mobile_no number(11) unique,salary number(7,2) check(salary>10000) ,joining_date date default sysdate, country varchar2(30) default'BD',dep_id number(3),constraint dep_emp_fk foreign key(dep_id) references department(dep_id));
+
+Table created.
+
+
+SQL> describe department ;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEP_ID                                    NOT NULL NUMBER(3)
+ DEP_NAME                                  NOT NULL VARCHAR2(20)
+
+SQL> describe employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL NUMBER(3)
+ EMP_NAME                                  NOT NULL VARCHAR2(20)
+ MOBILE_NO                                          NUMBER(11)
+ SALARY                                             NUMBER(7,2)
+ JOINING_DATE                                       DATE
+ COUNTRY                                            VARCHAR2(30)
+ DEP_ID                                             NUMBER(3)
+
+ 
+ SQL> create sequence dep_seq
+  2   increment by 10
+  3   start with 0
+  4  minvalue 0
+  5  maxvalue 100
+  6  nocache
+  7  nocycle;
+Sequence created.
+
+SQL> create sequence emp_seq
+  2   increment by 5
+  3   start with 0
+  4  minvalue 0
+  5  maxvalue 200
+  6  nocache
+  7   nocycle;
+
+Sequence created.
+
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'admin');
+
+1 row created.i
+
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'software');
+
+1 row created.
+
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'marketing');
+
+1 row created.
+
+
+SQL> select * from department;
+
+    DEP_ID DEP_NAME
+---------- --------------------
+         0 admin
+        10 software
+        20 marketing

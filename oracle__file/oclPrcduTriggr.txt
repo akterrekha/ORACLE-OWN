@@ -1,0 +1,79 @@
+
+create or replace trigger dep_af_update after update on department for each row
+declare
+begin
+update dep_backup
+set dep_id = :new.dep_id
+where dep_id = :old.dep_id;
+dbms_output.put_line('trigger for update successfully');
+end;
+/
+update department set dep_id = 100
+where dep_id = 1;
+
+create or replace trigger dep_af_del after delete on department for each row
+declare
+begin
+delete dep_backup
+where dep_id = :old.dep_id;
+dbms_output.put_line('trigger for delete successfully');
+end;
+/
+create sequence dep_seq
+increment by 10
+start with 0
+maxvalue 100
+minvalue 0
+nocache
+nocycle;
+
+create sequence emp_seq
+increment by 5
+start with 0
+maxvalue 200
+minvalue 0
+nocache
+nocycle;
+
+
+create or replace procedure insertDepartment(
+p_id in department.dep_id%type,
+p_name in department.dep_name% type)
+is
+begin
+insert into department(dep_id,dep_name) values(p_id,p_name);
+end;
+/
+
+create or replace procedure updateDepartment(
+p_id in department.dep_id%type,
+p_name in department.dep_name%type)
+is
+begin
+update department set dep_name = p_name
+where dep_id = p_id;
+end;
+/
+
+begin
+updateDepartment(2,'phisycs');
+end;
+/
+
+
+create or replace procedure deleteDepartment(
+p_id in department.dep_id%type)
+is
+begin
+delete from department
+where dep_id = p_id;
+end;
+/
+
+begin
+deleteDepartment(2);
+end;
+/
+
+
+

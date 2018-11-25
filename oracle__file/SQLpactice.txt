@@ -1,0 +1,18 @@
+1.(ch-1/19)=select department_name || q'[, it's assigned Manager Id: ]'|| manager_id AS "Department and Manager" from departments;
+     select DISTINCT department_id from employees;
+2.(ch-2/4)=select employee_id,last_name,Job_id,department_id  from employees
+      where department_id=90
+3.(ch_2/7)select last_name,Job_id,department_id  from employees
+      where last_name='khocher'
+4.(ch-2/8)select last_name,salary from employees
+      where salary<=3000;
+5.(ch-2/9)select last_name,salary from employees
+      where salary between 2500 and 3500
+6.(ch-2/21)select last_name, job_id,department_id,hire_date from employees
+      order by hire_date desc
+7.(ch-2/21)select  employee_id,last_name, salary*12 annsal from employees
+      order by annsal
+8.(ch-2/21)select last_name, department_id, salary from employees
+      order by department_id desc,salary desc;
+9.(ch-2/24)select employee_id,last_name,salary ,department_id from employees
+       where  employee_id = &employee_num; 

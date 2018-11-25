@@ -1,0 +1,163 @@
+
+SQL> connect
+Enter user-name: system
+Enter password:
+Connected.
+SQL> create user rashia identified by rashia;
+
+User created.
+
+SQL> grant dba to rashia;
+
+Grant succeeded.
+
+//////////////////////////////////////////////////////
+SQL> create sequence dep_seq
+  2   increment by 10
+  3   start with 50
+  4   maxvalue 100
+  5  nocache
+  6  nocycle;
+
+Sequence created.
+
+SQL> create sequence emp_seq
+  2   increment by 5
+  3   start with 1
+  4   maxvalue 200
+  5  nocache
+  6  nocycle;
+
+Sequence created.
+//////////////////////////////////////////////////////////////////////////
+SQL> create table department(d_id number(3) primary key,d_name varchar2(20) not null);
+
+Table created.
+
+SQL> create table employee(e_id number(3) primary key,e_name varchar2(20) not null,salary number(7,2)check(salary<50000), mobile_no number(11) unique,depar_id number(3),constraint dep_emp_fk foreign key (depar_id) references department (d_id));
+
+Table created.
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+SQL> insert into department(d_id,d_name) values(dep_seq.nextval,'marketing');
+
+1 row created.
+
+SQL> insert into department(d_id,d_name) values(dep_seq.nextval,'management');
+
+1 row created.
+
+SQL> insert into department(d_id,d_name) values(dep_seq.nextval,'accounting');
+
+1 row created.
+
+SQL> insert into department(d_id,d_name) values(dep_seq.nextval,'finance');
+
+1 row created.
+
+SQL> insert into department(d_id,d_name) values(dep_seq.nextval,'physics');
+
+1 row created.insert into
+
+SQL> insert into department(d_id,d_name) values(dep_seq.nextval,'biology');
+
+1 row created.
+
+SQL> select * from department;
+
+      D_ID D_NAMEselect from
+---------- --------------------
+        50 marketing
+        60 management
+        70 accounting
+        80 finance
+        90 physics
+       100 biology
+
+6 rows selected.
+========================================================================================
+=========================================================================================
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'doly',45000,01761572398,50);
+
+1 row created.
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'moly',44000,01761582398,50);
+
+1 row created.
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'joly',46000,01761582378,60);
+
+1 row created.
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'koly',46000,01761585378,70);
+
+1 row created.
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'noly',47000,01762585378,70);
+
+1 row created.
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'nipa',48000,01782585378,80);
+
+1 row created.
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'dipa',34000,01782535378,90);
+
+1 row created.
+
+SQL> insert into employee(e_id,e_name,salary,mobile_no,depar_id) values(emp_seq.nextval,'tipu',49000,01782535328,100);
+
+1 row created.
+
+SQL> select * from employee;
+
+      E_ID E_NAME                   SALARY  MOBILE_NO   DEPAR_ID
+---------- -------------------- ---------- ---------- ----------
+         1 doly                      45000 1761572398         50
+         6 moly                      44000 1761582398         50
+        16 joly                      46000 1761582378         60
+        21 koly                      46000 1761585378         70
+        26 noly                      47000 1762585378         70
+        31 nipa                      48000 1782585378         80
+        41 dipa                      34000 1782535378         90
+        46 tipu                      49000 1782535328        100
+
+8 rows selected.
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+=========================================================================\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+SQL> select e.e_id,e_name,d.d_name from employee e,department d where e.depar_id = d.d_id;
+
+      E_ID E_NAME               D_NAME
+---------- -------------------- --------------------
+         1 doly                 marketing
+         6 moly                 marketing
+        16 joly                 management
+        21 koly                 accounting
+        26 noly                 accounting
+        31 nipa                 finance
+        41 dipa                 physics
+        46 tipu                 biology
+
+8 rows selected.select
+
+SQL>][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+ create view empVu as select e_id,e_name,depar_id from employee where depar_id=90;
+
+View created.
+SQL> select * from empvu;
+
+      E_ID E_NAME                 DEPAR_ID
+---------- -------------------- ----------
+        41 dipa                         90
+
+SQL>
+
+
+{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+
+

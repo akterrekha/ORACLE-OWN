@@ -1,0 +1,166 @@
+SQL> connect
+Enter user-name: eid
+Connected.
+SQL> select table_name from user_tables;
+
+TABLE_NAME                                                                      
+------------------------------                                                  
+DEPARTMENT                                                                      
+EMPLOYEE                                                                        
+
+SQL> create table emp(e_id number(3),e_name varchar2(30),salary number(8,2),hire_date date,address varchar2(50));
+
+Table created.
+
+SQL> alter table emp add constraint emp_e_id_pk primary key(e_id);
+
+Table altered.
+
+SQL> insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address');
+Enter value for e_id: 1
+Enter value for e_name: poly
+Enter value for salary: 45000
+Enter value for hire_date: '26-jun_2018'
+Enter value for address: dhaka
+old   1: insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address')
+new   1: insert into emp(e_id,e_name,salary,hire_date,address) values(1,'poly',45000,'26-jun_2018','dhaka')
+
+1 row created.
+
+
+SQL> insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address');
+Enter value for e_id: 2
+Enter value for e_name: doly
+Enter value for salary: 50000
+Enter value for hire_date: sysdate
+Enter value for address: india
+old   1: insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address')
+new   1: insert into emp(e_id,e_name,salary,hire_date,address) values(2,'doly',50000,sysdate,'india')
+
+1 row created.
+
+SQL> insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address');
+Enter value for e_id: 3
+Enter value for e_name: java
+Enter value for salary: 55000
+Enter value for hire_date: sysdate
+Enter value for address: vutan
+old   1: insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address')
+new   1: insert into emp(e_id,e_name,salary,hire_date,address) values(3,'java',55000,sysdate,'vutan')
+
+1 row created.
+
+SQL> insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address');
+Enter value for e_id: 4
+Enter value for e_name: koly
+Enter value for salary: 60000
+Enter value for hire_date: sysdate
+Enter value for address: maldip
+old   1: insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address')
+new   1: insert into emp(e_id,e_name,salary,hire_date,address) values(4,'koly',60000,sysdate,'maldip')
+
+1 row created.
+
+SQL> insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address');
+Enter value for e_id: 5
+Enter value for e_name: safira
+Enter value for salary: 65000
+Enter value for hire_date: '26/jun/2018'
+Enter value for address: barisal
+old   1: insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address')
+new   1: insert into emp(e_id,e_name,salary,hire_date,address) values(5,'safira',65000,'26/jun/2018','barisal')
+
+1 row created.
+
+SQL> insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address');
+Enter value for e_id: 6
+Enter value for e_name: jahan
+Enter value for salary: 70000
+Enter value for hire_date: '10/dec/2018'
+Enter value for address: khulna
+old   1: insert into emp(e_id,e_name,salary,hire_date,address) values(&e_id,'&e_name',&salary,&hire_date,'&address')
+new   1: insert into emp(e_id,e_name,salary,hire_date,address) values(6,'jahan',70000,'10/dec/2018','khulna')
+
+1 row created.
+
+SQL> select * from emp;
+
+      E_ID E_NAME                             SALARY HIRE_DATE                  
+---------- ------------------------------ ---------- ---------                  
+ADDRESS                                                                         
+--------------------------------------------------                              
+         1 poly                                45000 26-JUN-18                  
+dhaka                                                                           
+                                                                                
+         2 doly                                50000 10-SEP-18                  
+india                                                                           
+                                                                                
+         3 java                                55000 10-SEP-18                  
+vutan                                                                           
+                                                                                
+
+      E_ID E_NAME                             SALARY HIRE_DATE                  
+---------- ------------------------------ ---------- ---------                  
+ADDRESS                                                                         
+--------------------------------------------------                              
+         4 koly                                60000 10-SEP-18                  
+maldip                                                                          
+                                                                                
+         5 safira                              65000 26-JUN-18                  
+barisal                                                                         
+                                                                                
+         6 jahan                               70000 10-DEC-18                  
+khulna                                                                          
+                                                                                
+
+6 rows selected.
+
+SQL> alter table emp add(phone varchar2(11),job_title varchar2 (30));
+
+Table altered.
+
+
+
+
+
+SQL> select e_name,job_title,salary,salary+(salary*.30)as review_salary FROM emp;
+
+E_NAME                         JOB_TITLE                          SALARY       REVIEW_SALARY                                                                   
+    
+------------------------------ ------------------------------ ----------     -------------   
+                                                                
+poly                                                               45000     58500          
+                                                                   
+                                                                                
+doly                                                               50000     65000     
+                                                                         
+                                                                                
+java                                                               55000     71500           
+                                                                 
+                                                                                
+
+E_NAME                         JOB_TITLE                          SALARY    REVIEW_SALARY        
+------------------------------ ------------------------------ ----------   -------------                      
+                                                                                                                                                            
+                                                          
+koly                                                               60000     78000      
+                                                                        
+                                                                                
+safira                                                             65000     84500        
+                                                                     
+                                                                                
+jahan                                                              70000     91000        
+                                                                  
+                                                                                
+
+6 rows selected.
+
+
+
+SQL> select e_name,salary from emp where salary = (select min(salary)from emp);
+
+E_NAME                             SALARY                                       
+------------------------------ ----------                                       
+poly                                45000                                       
+
+SQL> spool off

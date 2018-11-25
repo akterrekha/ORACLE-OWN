@@ -1,0 +1,243 @@
+SQL> connect
+Enter user-name: system
+Connected.
+SQL(1)> create user eid3 identified by eid3;
+
+User created.
+
+SQL> grant dba to eid3;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: eid3
+Connected.
+================================ANS QUES NO:02============================
+SQL(A)> create table department(dep_id number(3) primary key,department_name varchar2(20) not null);
+
+Table created.
+
+SQL(B)> create table employee(emp_id number(3) primary key,emp_name varchar2(20) not null,mobile_no number(11) unique, salary number(7,2) check(salary>10000),joining_date date default sysdate,country varchar2(30) default 'BD',dep_id number(3),constraint emp_dep_fk foreign key (dep_id) references department(dep_id));
+
+Table created.
+
+SQL(C.i)> describe department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEP_ID                                    NOT NULL NUMBER(3)
+ DEPARTMENT_NAME                           NOT NULL VARCHAR2(20)
+
+SQL(c.ii)> describe employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL NUMBER(3)
+ EMP_NAME                                  NOT NULL VARCHAR2(20)
+ MOBILE_NO                                          NUMBER(11)
+ SALARY                                             NUMBER(7,2)
+ JOINING_DATE                                       DATE
+ COUNTRY                                            VARCHAR2(30)
+ DEP_ID                                             NUMBER(3)
+================================================ANS TO THE QUES NO:3=======================
+SQL(A)> create sequence dep_seq
+  2  increment by 10
+  3  start with 0
+  4  minvalue 0
+  5  maxvalue 100
+  6  nocache
+  7  nocycle;
+
+Sequence created.
+
+SQL(B)> create sequence emp_seq
+  2  increment by 5
+  3  start with 0
+  4  minvalue 0
+  5  maxvalue 200
+  6  nocache
+  7  nocycle;
+
+Sequence created.
+
+SQL(C)> select sequence_name from user_sequences;
+
+SEQUENCE_NAME                                                                   
+------------------------------                                                  
+DEP_SEQ                                                                         
+EMP_SEQ                                                                         
+================================================ANS TO THE QUES NO:4=======================
+SQL(A)> select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+SYS_C007169                                                                     
+SYS_C007172                                                                     
+SYS_C007173                                                                     
+
+SQL(B)> create index dep_inx on department(department_name);
+
+Index created.
+
+SQL(C)> select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+SYS_C007169                                                                     
+SYS_C007172                                                                     
+SYS_C007173                                                                     
+DEP_INX                                                                         
+
+SQL(D)> insert into department(dep_id,department_name) values (dep_seq.nextval,'admin');
+
+1 row created.
+
+SQL> insert into department(dep_id,department_name) values (dep_seq.nextval,'software');
+
+1 row created.
+
+SQL> insert into department(dep_id,department_name) values (dep_seq.nextval,'marketing');
+
+1 row created.
+
+SQL(E)> create view dep_vu as select * from department;
+
+View created.
+
+SQL(F)> select view_name from user_views;
+
+VIEW_NAME                                                                       
+------------------------------                                                  
+DEP_VU                                                                          
+================================================ANS TO THE QUES NO:4 er(G)=======================
+SQL> create synonym dep_syn for department;
+
+Synonym created.
+================================================ANS TO THE QUES NO:4 er (H)=======================
+SQL> create synonym dep_vu_syn for dep_vu;
+
+Synonym created.
+///////////////
+ select * from dep_vu;
+
+    DEP_ID DEPARTMENT_NAME
+---------- --------------------
+         0 admin
+        10 software
+        20 SALES
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''OR'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+select * from dep_syn;
+
+    DEP_ID DEPARTMENT_NAME
+---------- --------------------
+         0 admin
+        10 software
+        20 SALES
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''OR'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+SQL> select * from dep_vu_syn;
+
+    DEP_ID DEPARTMENT_NAME                                                      
+---------- --------------------                                                 
+         0 admin                                                                
+        10 software                                                             
+        20 marketing                                                            
+
+================================================ANS TO THE QUES NO:5=======================
+SQL(A)select index_name from user_indexes;
+
+INDEX_NAME
+------------------------------
+SYS_C007169
+SYS_C007172
+SYS_C007173
+DEP_INX
+
+SQL(B) create index emp_inx on employee(emp_name);
+
+Index created.
+C------------------------------------------------------------------------------
+
+SQL> select sequence_name from user_sequences;
+
+SEQUENCE_NAME                                                                   
+------------------------------                                                  
+DEP_SEQ                                                                         
+EMP_SEQ    
+================================================ANS TO THE QUES NO:5 er (D)=======================
+SQL> insert into employee(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'doly',01761572394,45000,'25-jul-18','japan',0);
+
+1 row created.
+
+SQL> insert into employee(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'koly',01761572894,55000,'25-jul-18','nepal',10);
+
+1 row created.
+
+SQL> insert into employee(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'moly',01961572894,50000,'25-jul-18','vutan',20);
+
+1 row created.
+
+SQL> insert into employee(emp_id,emp_name,mobile_no,salary,joining_date,country,dep_id) values(emp_seq.nextval,'poly',01961552894,50000,'26-jul-18','india',20);
+
+1 row created.
+
+SQL> insert into employee(emp_id,emp_name,mobile_no,salary,dep_id) values(emp_seq.nextval,'joly',01968552894,60000,10);
+
+1 row created.
+
+
+SQL(E)>  create view emp_vu as select * from employee;
+
+View created.
+
+SQL(F)> select view_name from user_views;
+
+VIEW_NAME                                                                       
+------------------------------                                                  
+DEP_VU                                                                          
+EMP_VU                                                                          
+
+SQL> create synonym emp_syn for employee;
+
+Synonym created.
+
+SQL> create synonym emp_vu_syn for emp_vu;
+
+Synonym created.
+
+SQL> select * from emp_vu;
+
+   
+SQL> select * from emp_vu_syn;
+=============================================ANS TO THE QUES:6===========================================
+SQL(A)> update department set department_name = 'SALES' where dep_id = 20;
+
+1 row updated.
+
+SQL> select * from department;
+
+    DEP_ID DEPARTMENT_NAME                                                      
+---------- --------------------                                                 
+         0 admin                                                                
+        10 software                                                             
+        20 SALES                                                                
+
+SQL(B)> alter  table employee add(email varchar2(30) unique);
+
+Table altered.
+
+SQL> describe employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL NUMBER(3)
+ EMP_NAME                                  NOT NULL VARCHAR2(20)
+ MOBILE_NO                                          NUMBER(11)
+ SALARY                                             NUMBER(7,2)
+ JOINING_DATE                                       DATE
+ COUNTRY                                            VARCHAR2(30)
+ DEP_ID                                             NUMBER(3)
+ EMAIL                                     UNIQUE         VARCHAR2(30)
+
+SQL> update employee set dep_id = 20 where emp_id = 0;
+
+1 row updated.
+
+SQL> spool off;

@@ -1,0 +1,26 @@
+1.select employee_id,last_name,department_id from employees
+  where last_name = 'higgins';
+::::::ans:::::::::no data found--------------------
+
+
+2.select employee_id,last_name,department_id from employees
+  where  LOWER(last_name) = 'higgins';
+::::::ans:::::: 205   Higgins  110-------------------
+
+
+3.select employee_id,CONCAT(first_name,last_name) from employees;
+::::::ans:::::2 field k add kre-----jemon====
+{select employee_id,CONCAT(job_id,department_id ) from employees;}
+::::::::::ans:::::::::::AD_PRES90--------------------
+
+
+4.select employee_id, first_name,last_name, length(last_name ) from employees;
+::::::::ans:::::::::last-name=kabir,akhane 5 ti letter tai (length = 5)dekhabe-------
+{{{{{{{{{select employee_id, first_name,last_name, job_id,length(job_id) from employees;}}}}}
+::::::::::ans:::::::::job_id=AD_PRES--akhane length=7-----------------
+
+
+5.
+
+
+

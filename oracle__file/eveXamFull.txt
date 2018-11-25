@@ -1,0 +1,497 @@
+SQL> connect sys as sysdba;
+Connected.
+SQL> create user eidd identified by eidd;
+
+User created.
+
+SQL> grant dba to eidd;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: eidd
+Connected.
+SQL> savepoint eid;
+
+Savepoint created.
+
+SQL> show autocommit;
+autocommit OFF
+
+
+Table created.
+
+SQL> autocommit on;
+SP2-0734: unknown command beginning "autocommit..." - rest of line ignored.
+SQL> rollback to eid;
+rollback to eid
+*
+ERROR at line 1:
+ORA-01086: savepoint 'EID' never established in this session or is invalid 
+
+
+SQL> set autocommit on;
+SQL> show autocommit;
+autocommit IMMEDIATE
+SQL> drop table department;
+
+Table dropped.
+
+SQL> create table department(dep_id number(3) primary key,dep_name varchar2(12) not null);
+
+Table created.
+
+SQL> create table employee(emp_id number(3) primary key,emp_name varchar2(12) not null,mobile_no number(11) unique,salary number(7,2) check(salary>10000),joining_date date defaultsysdate,country varchar2(15) default 'BD',depar_id number(3),constaint emp_dep_fk foreign key (dep_id) references department(dep_id));
+create table employee(emp_id number(3) primary key,emp_name varchar2(12) not null,mobile_no number(11) unique,salary number(7,2) check(salary>10000),joining_date date defaultsysdate,country varchar2(15) default 'BD',depar_id number(3),constaint emp_dep_fk foreign key (dep_id) references department(dep_id))
+                                                                                                                                                                       *
+ERROR at line 1:
+ORA-00907: missing right parenthesis 
+
+
+SQL> create table employee(emp_id number(3) primary key,emp_name varchar2(12) not null,mobile_no number(11) unique,salary number(7,2) check(salary>10000),joining_date date defaultsysdate,country varchar2(15) default 'BD',depar_id number(3),constraint emp_dep_fk foreign key (dep_id) references department(dep_id));
+create table employee(emp_id number(3) primary key,emp_name varchar2(12) not null,mobile_no number(11) unique,salary number(7,2) check(salary>10000),joining_date date defaultsysdate,country varchar2(15) default 'BD',depar_id number(3),constraint emp_dep_fk foreign key (dep_id) references department(dep_id))
+                                                                                                                                                                       *
+ERROR at line 1:
+ORA-00907: missing right parenthesis 
+
+
+
+SQL> create table employee(emp_id number(3) primary key,emp_name varchar2(12) not null,mobile_no number(11) unique,salary number(7,2) check(salary>10000),joining_date date default sysdate,country varchar2(15) default 'BD',dep_id number(3),constraint emp_dep_fk foreign key (dep_id) references department(dep_id));
+
+Table created.
+
+SQL> describe table department;
+Usage: DESCRIBE [schema.]object[@db_link]
+SQL> describe department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEP_ID                                    NOT NULL NUMBER(3)
+ DEP_NAME                                  NOT NULL VARCHAR2(12)
+
+SQL> describe employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL NUMBER(3)
+ EMP_NAME                                  NOT NULL VARCHAR2(12)
+ MOBILE_NO                                          NUMBER(11)
+ SALARY                                             NUMBER(7,2)
+ JOINING_DATE                                       DATE
+ COUNTRY                                            VARCHAR2(15)
+ DEP_ID                                             NUMBER(3)
+
+SQL> create table dep_backup as select * from department;
+
+Table created.
+
+SQL> create table emp_backup as select * from employee;
+
+Table created.
+
+SQL> create or replace trigger dep_af_ins after insert on eidd for each row
+  2  declare
+  3  begin
+  4  insert into dep_backup values (:new.dep_id, :new.dep_name);
+  5  dbms_output.put_line('trigger for insert successfully');
+  6  end;
+  7  /
+create or replace trigger dep_af_ins after insert on eidd for each row
+                                                     *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> create or replace trigger dep_af_ins after insert on department for each row
+  2  declare
+  3  begin
+  4  insert into dep_backup values (:new.dep_id, :new.dep_name);
+  5  dbms_output.put_line('trigger for insert successfully');
+  6  end;
+  7  /
+
+Trigger created.
+
+SQL> insert into department values(2,'koly');
+
+1 row created.
+
+Commit complete.
+SQL> create or replace trigger dep_af_update after update on department for each row
+  2  declare
+  3  begin
+  4  update dep_backup
+  5  set dep_id = :new.dep_id
+  6  where dep_id = :old.dep_id
+  7  dbms_output.put_line('trigger for update successfully');
+  8  end;
+  9  /
+
+Warning: Trigger created with compilation errors.
+
+SQL> create or replace trigger dep_af_update after update on department for each row
+  2  declare
+  3  begin
+  4  update dep_backup
+  5  set dep_id = :new.dep_id
+  6  where dep_id = :old.dep_id;
+  7  dbms_output.put_line('trigger for update successfully');
+  8  end;
+  9  /
+
+Trigger created.
+
+SQL> update department set dep_id = 100
+  2  where dep_id = 1;
+
+0 rows updated.
+
+Commit complete.
+SQL> create or replace trigger dep_af_del after delete on department for each row
+  2  declare
+  3  begin
+  4  delete dep_backup
+  5  where dep_id = :old.dep_id;
+  6  dbms_output.put_line('trigger for delete successfully');
+  7  end;
+  8  /
+
+Trigger created.
+
+SQL> create sequence dep_seq
+  2  increment by 10
+  3  start with 0
+  4  maxvalue 100
+  5  nocache
+  6  nocycle;
+create sequence dep_seq
+*
+ERROR at line 1:
+ORA-04006: START WITH cannot be less than MINVALUE 
+
+
+SQL> create sequence dep_seq
+  2  increment by 10
+  3  start with 0
+  4  maxvalue 100
+  5  minvalue 0
+  6  nocache
+  7  nocycle;
+
+Sequence created.
+
+SQL> 
+SQL> create sequence emp_seq
+  2  increment by 5
+  3  start with 0
+  4  maxvalue 200
+  5  minvalue 0
+  6  nocache
+  7  nocycle;
+
+Sequence created.
+
+SQL> 
+SQL> 
+SQL> select sequence_name from user_sequences;
+
+SEQUENCE_NAME                                                                   
+------------------------------                                                  
+DEP_SEQ                                                                         
+EMP_SEQ                                                                         
+
+SQL> create index dep_inx on department(dep_name);
+
+Index created.
+
+SQL> select index_name from user_index;
+select index_name from user_index
+                       *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> select index_name from user_indexes;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+SYS_C007312                                                                     
+SYS_C007315                                                                     
+SYS_C007316                                                                     
+DEP_INX                                                                         
+
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'marketing';)
+  2  insert into department(dep_id,dep_name) values(dep_seq.nextval,'marketing';);
+insert into department(dep_id,dep_name) values(dep_seq.nextval,'marketing';)
+                                                                          *
+ERROR at line 1:
+ORA-00911: invalid character 
+
+
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'marketing');
+
+1 row created.
+
+Commit complete.
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'finance');
+
+1 row created.
+
+Commit complete.
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'accounting');
+
+1 row created.
+
+Commit complete.
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'social science');
+insert into department(dep_id,dep_name) values(dep_seq.nextval,'social science')
+                                                               *
+ERROR at line 1:
+ORA-12899: value too large for column "EIDD"."DEPARTMENT"."DEP_NAME" (actual: 
+14, maximum: 12) 
+
+
+SQL> insert into department(dep_id,dep_name) values(dep_seq.nextval,'admin')
+  2  ;
+
+1 row created.
+
+Commit complete.
+SQL> create view dep_vu as select * from department;
+
+View created.
+
+SQL> select view_name from user_viewes;
+select view_name from user_viewes
+                      *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> select view_name from user_views;
+
+VIEW_NAME                                                                       
+------------------------------                                                  
+DEP_VU                                                                          
+
+SQL> create synonym dep_syn for department;
+
+Synonym created.
+
+SQL> create synonym dep_vu_syn for dep_vu;
+
+Synonym created.
+
+SQL> create or replace procedure insertDepartment(
+  2  p_id in department.dep_id%type,
+  3  p_name in department.dep_name% type)
+  4  is
+  5  begin
+  6  insert into department(dep_id,dep_name) values(p_id,p_name);
+  7  end;
+  8  /
+
+Procedure created.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> begin
+  2  insertDepartment(dep_seq.nextval,'software');
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+Commit complete.
+SQL> create or replace procedure updateDepartment()
+  2  
+  3  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> create or replace procedure updateDepartment(
+  2  p_id in department.dep_id%type
+  3  p_name in department.dep-name%type)
+  4  is
+  5  begin
+  6  update department set dep_name = p_name where dep_id = p_id;
+  7  end;
+  8  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> create or replace procedure updateDepartment(
+  2  p_id in department.dep_id%type
+  3  p_name in department.dep-name%type)
+  4  is
+  5  begin
+  6  update department set dep_name = p_name
+  7  where dep_id = p_id;
+  8  end;
+  9  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> create or replace procedure updateDepartment(
+  2  p_id in department.dep_id%type,
+  3  p_name in department.dep-name%type)
+  4  is
+  5  begin
+  6  update department set dep_name = p_name
+  7  where dep_id = p_id;
+  8  end;
+  9  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> create or replace procedure updateDepartment(
+  2  p_id in department.dep_id%type,
+  3  p_name in department.dep_name%type)
+  4  is
+  5  begin
+  6  update department set dep_name = p_name
+  7  where dep_id = p_id;
+  8  end;
+  9  /
+
+Procedure created.
+
+SQL> begin
+  2  updateDepartment(3,'phisycs');
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+Commit complete.
+SQL> create or replace procedure deleteDepartment(
+  2  p_id in department.dep_id%type)
+  3  is
+  4  begin
+  5  delete from department
+  6  where dep_id = p_id;
+  7  end;
+  8  /
+
+Procedure created.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> describe department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEP_ID                                    NOT NULL NUMBER(3)
+ DEP_NAME                                  NOT NULL VARCHAR2(12)
+
+SQL> select * from department;
+
+    DEP_ID DEP_NAME                                                             
+---------- ------------                                                         
+         2 koly                                                                 
+         0 marketing                                                            
+        10 finance                                                              
+        20 accounting                                                           
+        40 admin                                                                
+        50 software                                                             
+
+6 rows selected.
+
+SQL> begin
+  2  updateDepartment(2,'phisycs');
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+Commit complete.
+SQL> select * from department;
+
+    DEP_ID DEP_NAME                                                             
+---------- ------------                                                         
+         2 phisycs                                                              
+         0 marketing                                                            
+        10 finance                                                              
+        20 accounting                                                           
+        40 admin                                                                
+        50 software                                                             
+
+6 rows selected.
+
+SQL> begin
+  2  deleteDepartment(4);
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+Commit complete.
+SQL> select * from department;
+
+    DEP_ID DEP_NAME                                                             
+---------- ------------                                                         
+         2 phisycs                                                              
+         0 marketing                                                            
+        10 finance                                                              
+        20 accounting                                                           
+        40 admin                                                                
+        50 software                                                             
+
+6 rows selected.
+
+SQL> begin
+  2  deleteDepartment(4);
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+Commit complete.
+SQL> begin
+  2  deleteDepartment(2);
+  3  end;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+Commit complete.
+SQL> select * from department;
+
+    DEP_ID DEP_NAME                                                             
+---------- ------------                                                         
+         0 marketing                                                            
+        10 finance                                                              
+        20 accounting                                                           
+        40 admin                                                                
+        50 software                                                             
+
+SQL> spool off
+
+
+
+
+create or replace trigger emp_af_ins after insert on employees for each row
+declare
+begin
+insert into emp_backup values(:new.emp_id, :new.emp_name, :new.mobile_no, :new.salary, :new.joining_date, :new.country, :new.depar_id);
+dbms_output.put_line('trigger for insert successfully');
+end;
+ /
+create or replace procedure insertEmployees(
+p_id in employees.emp_id%type,
+p_name in employees.emp_name%type,
+p_phon in employees.mobile_no%type,
+p_date in employees.joining_date%type,
+p_country in employees.country%type,
+p_depar in employees.depar_id%type)
+is
+begin
+insert into employees(emp_id,emp_name,mobile_no,joining_date,country,depar_id) values (p_id,p_name,p_phon,p_date,p_country,p_depar);
+end;
+/

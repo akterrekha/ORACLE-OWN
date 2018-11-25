@@ -1,0 +1,147 @@
+SQL> connect sys as sysdba;
+Enter password:
+Connected.
+SQL> create user xyz identified by xyz;
+
+User created.
+
+SQL> connect
+Enter user-name: xyz
+Enter password:
+ERROR:
+ORA-01045: user XYZ lacks CREATE SESSION privilege; logon denied
+Warning: You are no longer connected to ORACLE.
+SQL> connect sys as sysdba
+Enter password:
+Connected.
+SQL> grant create session to xys
+  2  grant create session to xys;
+grant create session to xys
+*
+ERROR at line 2:
+ORA-00933: SQL command not properly ended
+
+
+SQL> grant create session to xys;
+
+Grant succeeded.
+
+SQL> connect;
+Enter user-name: xys
+Enter password:
+Connected.
+SQL> create table test(id number(5) primary key,name varchar2(15)not null);
+create table test(id number(5) primary key,name varchar2(15)not null)
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges
+
+
+SQL> connect sys as sysdba;
+Enter password:
+Connected.
+SQL> grant  create table to xys;
+
+Grant succeeded.
+/////////////////////////////////////////////////
+SQL> connect
+Enter user-name: xys
+Enter password:
+Connected.
+SQL> create table test(id number(5) primary key,name varchar2(15)not null);
+create table test(id number(5) primary key,name varchar2(15)not null)
+*
+ERROR at line 1:user
+ORA-01950: no privileges on tablespace 'SYSTEM'
+////////////////////////////////////////////////
+SQL> connect sys as sysdba;
+Enter password:
+Connected.
+SQL> alter user xys quota 500m on system;
+
+User altered.
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+SQL> connect
+Enter user-name: xys
+Enter password:
+Connected.
+SQL>SQL> create table test(id number(5) primary key,name varchar2(15)not null);
+
+Table created.
+
+SQL> insert into test(id,name) values(20,'afjal');
+
+1 row created.
+
+SQL> insert into test(id,name) values(10,'safia');
+
+1 row created.
+//////////////////
+
+=====================================playing with user <- privilige=======================================
+SQL> connect sys as sysdba;
+Enter password:
+Connected.
+SQL> create user xyz2 identified by xyz2;
+
+User created.
+SQL> create role manage;
+
+Role created.
+
+SQL> grant create session, create table ,create view to manage;
+
+Grant succeeded.
+
+SQL> grant manage to xyz2;g
+
+Grant succeeded.
+
+SQL> alter user xyz2 quota 500m on system;
+
+User altered.
+
+SQL> connect
+Enter user-name: xyz2
+Enter password:
+Connected.
+SQL> create table test(id number(2) primary key, name varchar2(15));
+
+Table created.
+SQL> insert into test(id,name) values(10,'karim');
+1 row created.
+SQL> insert into test(id,name) values(12,'moly');
+1 row created.
+SQL> insert into test(id,name) values(20,'koly');
+1 row created.
+SQL> select * from test;
+
+        ID NAME
+---------- ---------------
+        10 karim
+        12 moly
+        20 koly
+////////////////////////////////////////
+SQL> create view test_vu as select id, name from test where id=20;
+View created.
+SQL> select * from test_vu;
+
+        ID NAME
+---------- ---------------
+        20 koly
+		
+		//////////////////////////////
+SQL> connect sys as sysdba;
+Enter password:
+Connected.
+SQL> grant select on xys.test to xyz2 with grant option;
+
+Grant succeeded.
+SQL> select * from xys.test;
+
+        ID NAME
+---------- ---------------
+        20 afjal
+        10 safia	
+..................................................................................................................................
+		

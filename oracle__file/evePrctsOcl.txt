@@ -1,0 +1,21 @@
+
+SQL> create table cus_backup as select * from customer;
+
+Table created.
+create or replace trigger cus_af_ins after insert on customer for each row
+declare
+begin
+insert into cus_backup values (:new.id, :new.name, :new.country);
+dbms_output.put_line('record successfully');
+end;
+/
+create or replace procedure ins_cus(
+p_id in customer.id%type,
+p_name in customer.name%type,
+p_coun in customer.country%type)
+is
+begin
+insert into customer(id,name,country) values(p_id,p_name,p-coun);
+end;
+/
+
